@@ -34,6 +34,7 @@ module.exports = {
         }],
       },
       {
+        // this keeps throwing a loader error
         test: /\.scss$/,
         use: [
           MiniCssExtractPlugin.loader,

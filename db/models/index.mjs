@@ -1,6 +1,10 @@
 import { Sequelize } from 'sequelize';
 import url from 'url';
-import allConfig from '../config/config.js';
+import allConfig from './../../config/config.js';
+
+// import models
+import initUserModel from './users.mjs';
+import initGamesModel from './games.mjs';
 
 const env = process.env.NODE_ENV || 'development';
 const config = allConfig[env];
@@ -27,6 +31,10 @@ if (env === 'production') {
 else {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
+
+// add own models and relations here
+db.Player = initUserModel(sequelize, Sequelize.DataTypes);
+db.Game = initGamesModel(sequelize, Sequelize.DataTypes);
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
