@@ -14,4 +14,5 @@ export default function bindRoutes(app) {
   // });
 
   app.get('/', usersController.index);
+  app.get('/something', usersController.someDataFunction)
 }

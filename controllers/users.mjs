@@ -6,7 +6,7 @@ export default function initUsersController(db) {
   }
   // verify user login with issha or something
   const someDataFunction = (req, res) => {
-    
+    console.log('someDataFunction')
   }
 
   return {
