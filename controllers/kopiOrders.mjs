@@ -114,35 +114,28 @@ const generateOrder = function (difficultyInt) {
       difficultyInt + 1,
       basicAttributesMap
     );
+    // console.log('generated the following attributes:', generatedAttributes);
     generatedAttributes.forEach((attr) => {
+      // console.log("now iterating", attr);
       let targetObj = basicAttributesObj[attr];
+      // console.log('targetObj', targetObj)
       let [attributeVariable] = getNRandomKeys(1, targetObj);
       orderObj[attr] = attributeVariable;
+      // console.log(orderObj[attr])
     });
-    const translatedOrderObj = translateEnglishToKopitiam(orderObj, "kopitiam");
+    const translatedOrderObj = translateEnglishToKopitiam(orderObj, 'kopitiam');
+    // console.log(orderObj);
     return { orderObj, translatedOrderObj };
     // this can be a route - eventlistener in button for axios POST, route points to this logic in the controller
   }
 };
+// save json object to game state file?
 
-export default function initGamesController(db) {
-  // generate a coffee order from the server list of options
-  // save word into game state json object in the db's games table
-  // get input from user's attemp
-  // check if input matches server order
-  const someFunction = (req, res) => {
-    // something
-  };
+// to move all this to controller
+// create a new dir in root called helpers
 
-  const getOrdersObject = function (req, res) {
-    // console.log(req)
-    const newObj = generateOrder(1); // keep difficulty to 1 for testing
-    console.log(newObj);
-    res.send(newObj);
-  };
-
+export default function initOrdersController(db) {
   return {
-    someFunction,
-    getOrdersObject,
+    generateOrder,
   };
 }
