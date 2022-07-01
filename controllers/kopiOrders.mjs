@@ -123,7 +123,7 @@ const generateOrder = function (difficultyInt) {
       orderObj[attr] = attributeVariable;
       // console.log(orderObj[attr])
     });
-    const translatedOrderObj = translateEnglishToKopitiam(orderObj, 'kopitiam');
+    const translatedOrderObj = translateEnglishToKopitiam(orderObj, "kopitiam");
     // console.log(orderObj);
     return { orderObj, translatedOrderObj };
     // this can be a route - eventlistener in button for axios POST, route points to this logic in the controller
@@ -135,7 +135,18 @@ const generateOrder = function (difficultyInt) {
 // create a new dir in root called helpers
 
 export default function initOrdersController(db) {
+  const handleSubmission = function (req, res) {
+    console.log("kopi submission received!");
+    console.log(req);
+    // console.log(res);
+    // oh dear why doesn't it have any request data
+    console.log(req.data);
+    console.log(res.data);
+    res.send({})
+  };
+
   return {
     generateOrder,
+    handleSubmission,
   };
 }

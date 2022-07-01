@@ -17,6 +17,7 @@ const difficultyForm = document.getElementById("difficultyFormContainer");
 difficultyForm.style.visibility = "hidden"; // start hidden
 const gameDiv = document.getElementById("gameContainer");
 gameDiv.style.visibility = "hidden";
+const submitButton = document.getElementById("kopi-submission-buttton");
 
 const generateString = function (orderObj) {
   let result = "Kopi";
@@ -26,6 +27,28 @@ const generateString = function (orderObj) {
   result = result.replace(/[A-Z]/g, " $&").trim().replace("-", "");
   return result;
 };
+
+const getOrderObjectFromSelectionValues = function (){
+  // document.queryselector for every attribute - .value will return a string, with 'on' being defaulted if there is no defined value
+  const sugarValue = document.querySelector('input[name="sugar-btnradio"]:checked').value;
+  const strengthValue = document.querySelector('input[name="strength-btnradio"]:checked').value;
+  const tempValue = document.querySelector('input[name="temp-btnradio"]:checked').value;
+  const milkValue = document.querySelector('input[name="milk-btnradio"]:checked').value;
+
+  const orderObj = {}
+  orderObj['Sugar'] = sugarValue
+  orderObj['Strength'] = strengthValue
+  orderObj['Temperature'] = tempValue
+  orderObj['Milk'] = milkValue
+  for (const key in orderObj){
+    if (orderObj[key] === 'on'){
+      delete orderObj[key]
+    }
+  }
+  console.log('submitted order object:')
+  console.log(orderObj)
+  return orderObj
+}
 
 startButton.addEventListener("click", () => {
   document.body.appendChild(orderDiv);
@@ -43,7 +66,7 @@ difficultySubmitBtn.addEventListener("click", () => {
     })
     .then((req, res) => {
       // console.log(req.data);
-      console.log(generateString(req.data.translatedOrderObj));
+      console.log('generated string:', generateString(req.data.translatedOrderObj));
       difficultyForm.style.visibility = "hidden";
       gameDiv.style.visibility = "visible"
       // convert object to a sting to pass to user
@@ -51,17 +74,15 @@ difficultySubmitBtn.addEventListener("click", () => {
     });
 });
 
-// // identify particular paths via window.location.pathname?
-// if (window.location.pathname === "/") {
-//   // set set axios requests for those paths
-//   // axios requests here must have a corresponding app.get in routes.mjs
-//   axios
-//     .get("/something")
-//     .then((response) => {
-//       orderText.innerHTML = "test";
-//       console.log(response);
-//     })
-//     .catch((error) => {
-//       console.log(error);
-//     });
-// }
+submitButton.addEventListener('click', () => {
+  const submittedOrder = getOrderObjectFromSelectionValues()
+  // console.log(submittedOrder)
+  axios
+    .post('/submit-kopi', submittedOrder)
+    .then((req, res) => {
+      // help why doesnt it reach this line
+      console.log(req.data)
+      console.log('submitted request from index.js')
+    })
+})
+// will need some sort of axios post after submission object is generated
