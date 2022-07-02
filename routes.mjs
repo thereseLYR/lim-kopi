@@ -16,9 +16,6 @@ export default function bindRoutes(app) {
   // });
 
   app.get("/", usersController.index);
-  // app.get("/play", gamesController.getOrdersObject);
-  app.post("/play", gamesController.getOrdersObject);
-  // app.get("/something", usersController.someDataFunction);
-  // app.post("/getOrder", ordersController.generateOrder);
+  app.post("/play", ordersController.getOrdersObject);
   app.post("/submit-kopi", ordersController.handleSubmission);
 }

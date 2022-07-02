@@ -131,22 +131,28 @@ const generateOrder = function (difficultyInt) {
 };
 // save json object to game state file?
 
-// to move all this to controller
-// create a new dir in root called helpers
+// to add object comparison logic into this controller
 
 export default function initOrdersController(db) {
+  const getOrdersObject = function (req, res) {
+    // console.log(req)
+    const newObj = generateOrder(1); // keep difficulty to 1 for testing
+    console.log(newObj);
+    res.send(newObj);
+  };
+
   const handleSubmission = function (req, res) {
     console.log("kopi submission received!");
-    console.log(req);
+    // console.log(req);
     // console.log(res);
     // oh dear why doesn't it have any request data
-    console.log(req.data);
-    console.log(res.data);
-    res.send({})
+    console.log(req.body);
+    res.send(req.body)
+    // some function to compare the recieved object with the sent orderObj
   };
 
   return {
-    generateOrder,
+    getOrdersObject,
     handleSubmission,
   };
 }

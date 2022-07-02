@@ -5,16 +5,12 @@ const orderDiv = document.createElement("div");
 orderDiv.setAttribute("id", "order-div");
 orderDiv.classList.add("bg-warning");
 
-const orderText = document.createElement("h1");
-orderText.setAttribute("id", "order-text");
-orderText.classList.add("bg-secondary");
-
 // create const references to the elements created
-// const orderWindow = document.getElementById("order-text");
 const startButton = document.getElementById("startButton");
 const difficultySubmitBtn = document.getElementById("difficultySubmitBtn");
 const difficultyForm = document.getElementById("difficultyFormContainer");
 difficultyForm.style.visibility = "hidden"; // start hidden
+const orderText = document.getElementById('order-text')
 const gameDiv = document.getElementById("gameContainer");
 gameDiv.style.visibility = "hidden";
 const submitButton = document.getElementById("kopi-submission-buttton");
@@ -52,11 +48,9 @@ const getOrderObjectFromSelectionValues = function (){
 
 startButton.addEventListener("click", () => {
   document.body.appendChild(orderDiv);
-  orderDiv.appendChild(orderText);
   startButton.remove();
   difficultyForm.style.visibility = "visible";
   // ok so how do i feed the order generation into my axios bits
-  // orderText.innerHTML = "HI THERE";
 });
 
 difficultySubmitBtn.addEventListener("click", () => {
@@ -65,23 +59,26 @@ difficultySubmitBtn.addEventListener("click", () => {
       difficulty: document.querySelector("#difficulty"),
     })
     .then((req, res) => {
-      // console.log(req.data);
-      console.log('generated string:', generateString(req.data.translatedOrderObj));
+      // receivedOrder is being saved as 'Object Object'
+      console.log('orderObj data saved to localStorage:', JSON.stringify(req.data.orderObj))
+      window.localStorage.setItem('receivedOrder', JSON.stringify(req.data.orderObj))
+      orderText.innerText = generateString(req.data.translatedOrderObj)
       difficultyForm.style.visibility = "hidden";
       gameDiv.style.visibility = "visible"
-      // convert object to a sting to pass to user
-      // appendchild with the given json data
     });
 });
 
 submitButton.addEventListener('click', () => {
   const submittedOrder = getOrderObjectFromSelectionValues()
-  // console.log(submittedOrder)
+  window.localStorage.setItem('submittedOrder', submittedOrder)
   axios
-    .post('/submit-kopi', submittedOrder)
+    .post('/submit-kopi', {
+      'recievedOrder': JSON.parse(window.localStorage.getItem('receivedOrder')), 
+      'submittedOrder': submittedOrder
+    })
     .then((req, res) => {
-      // help why doesnt it reach this line
-      console.log(req.data)
+      window.localStorage.clear
+      console.log('request data:', req.data)
       console.log('submitted request from index.js')
     })
 })
