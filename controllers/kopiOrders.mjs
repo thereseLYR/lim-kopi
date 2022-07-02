@@ -9,20 +9,17 @@ const sugarLevelsMap = {
 
 const strengthLevelsMap = {
   Poh: "Weak",
-  "-": "Normal", // yes, this is an empty string as a key
   Gao: "Strong",
   "Di Lo": "Extra Strong",
 };
 
 const temperatureLevelsMap = {
-  "-": "Hot", // assume drinks are hot unless told otherwise
   "Pua Sio": "Lukewarm",
   Peng: "Iced",
 };
 
 const milkMap = {
   O: "No Milk",
-  "-": "Condensed Milk",
   C: "Evaporated Milk",
 };
 

@@ -9,16 +9,16 @@
   <h1>Kopi EJS?</h1>
   <button id="startButton">Start Brewing</button>
   <%- include('./partials/difficultyMenu.ejs') %>
+  <%- include('./partials/submissionModal.ejs') %>
 
   <div class="container-fluid" id="gameContainer">
     <div class="row">
       <div class="col">
-        <h1>YOUR ORDER TEXT HERE</h1>
+        <h1 id="order-text" class="text-center fw-bold my-5">YOUR ORDER TEXT HERE</h1>
       </div>
     </div>
     <%- include('./partials/drinkSelectionButtons.ejs') %>
   </div>
-
 
 
   <!-- Optional JavaScript -->

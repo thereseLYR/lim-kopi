@@ -2,12 +2,10 @@ import { resolve } from "path";
 import db from "./db/models/index.mjs";
 
 import initUsersController from "./controllers/users.mjs";
-import initGamesController from "./controllers/games.mjs";
 import initOrdersController from "./controllers/kopiOrders.mjs";
 
 export default function bindRoutes(app) {
   const usersController = initUsersController(db);
-  const gamesController = initGamesController(db);
   const ordersController = initOrdersController(db);
 
   // Root route returns the Webpack-generated main.html file
