@@ -129,22 +129,48 @@ const generateOrder = function (difficultyInt) {
 // save json object to game state file?
 
 // to add object comparison logic into this controller
+const compareObjects = function(obj1, obj2){
+    for(const attribute in obj1){
+        if(obj1.hasOwnProperty(attribute)){
+            if(obj1[attribute] !== obj2[attribute]){
+                return false;
+            }
+        }
+    }
+    for(var attribute in obj2){
+        if(obj2.hasOwnProperty(attribute)){
+            if(obj1[attribute] !== obj2[attribute]){
+                return false;
+            }
+        }
+    }
+    return true;
+};
 
 export default function initOrdersController(db) {
   const getOrdersObject = function (req, res) {
     // console.log(req)
     const newObj = generateOrder(1); // keep difficulty to 1 for testing
-    console.log(newObj);
+    // console.log(newObj);
     res.send(newObj);
   };
 
   const handleSubmission = function (req, res) {
     console.log("kopi submission received!");
-    // console.log(req);
-    // console.log(res);
-    // oh dear why doesn't it have any request data
     console.log(req.body);
-    res.send(req.body)
+    // extract submittedOrder and translate to kopitiam
+    const translatedSubmittedOrder = translateEnglishToKopitiam(req.body['submittedOrder'], 'kopitiam')
+    // compare translated submittedOrder object with given receivedOrder object
+    // evaluate true or false
+    const result = compareObjects(translatedSubmittedOrder, req.body['receivedOrder'])
+    // console.log(result)
+    const resultsObj = {
+      receivedOrder: req.body['receivedOrder'],
+      submittedOrder: translatedSubmittedOrder,
+      evaluation: result
+    }
+    // a modal will pop up immediately after submission
+    res.send(resultsObj)
     // some function to compare the recieved object with the sent orderObj
   };
 

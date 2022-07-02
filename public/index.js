@@ -10,10 +10,11 @@ const startButton = document.getElementById("startButton");
 const difficultySubmitBtn = document.getElementById("difficultySubmitBtn");
 const difficultyForm = document.getElementById("difficultyFormContainer");
 difficultyForm.style.visibility = "hidden"; // start hidden
-const orderText = document.getElementById('order-text')
+const orderText = document.getElementById("order-text");
 const gameDiv = document.getElementById("gameContainer");
 gameDiv.style.visibility = "hidden";
 const submitButton = document.getElementById("kopi-submission-buttton");
+const modalBodyText = document.getElementById("modal-body-text");
 
 const generateString = function (orderObj) {
   let result = "Kopi";
@@ -24,27 +25,35 @@ const generateString = function (orderObj) {
   return result;
 };
 
-const getOrderObjectFromSelectionValues = function (){
+const getOrderObjectFromSelectionValues = function () {
   // document.queryselector for every attribute - .value will return a string, with 'on' being defaulted if there is no defined value
-  const sugarValue = document.querySelector('input[name="sugar-btnradio"]:checked').value;
-  const strengthValue = document.querySelector('input[name="strength-btnradio"]:checked').value;
-  const tempValue = document.querySelector('input[name="temp-btnradio"]:checked').value;
-  const milkValue = document.querySelector('input[name="milk-btnradio"]:checked').value;
+  const sugarValue = document.querySelector(
+    'input[name="sugar-btnradio"]:checked'
+  ).value;
+  const strengthValue = document.querySelector(
+    'input[name="strength-btnradio"]:checked'
+  ).value;
+  const tempValue = document.querySelector(
+    'input[name="temp-btnradio"]:checked'
+  ).value;
+  const milkValue = document.querySelector(
+    'input[name="milk-btnradio"]:checked'
+  ).value;
 
-  const orderObj = {}
-  orderObj['Sugar'] = sugarValue
-  orderObj['Strength'] = strengthValue
-  orderObj['Temperature'] = tempValue
-  orderObj['Milk'] = milkValue
-  for (const key in orderObj){
-    if (orderObj[key] === 'on'){
-      delete orderObj[key]
+  const orderObj = {};
+  orderObj["Sugar"] = sugarValue;
+  orderObj["Strength"] = strengthValue;
+  orderObj["Temperature"] = tempValue;
+  orderObj["Milk"] = milkValue;
+  for (const key in orderObj) {
+    if (orderObj[key] === "on") {
+      delete orderObj[key];
     }
   }
-  console.log('submitted order object:')
-  console.log(orderObj)
-  return orderObj
-}
+  // console.log("submitted order object:");
+  // console.log(orderObj);
+  return orderObj;
+};
 
 startButton.addEventListener("click", () => {
   document.body.appendChild(orderDiv);
@@ -59,27 +68,40 @@ difficultySubmitBtn.addEventListener("click", () => {
       difficulty: document.querySelector("#difficulty"),
     })
     .then((req, res) => {
-      // receivedOrder is being saved as 'Object Object'
-      console.log('orderObj data saved to localStorage:', JSON.stringify(req.data.orderObj))
-      window.localStorage.setItem('receivedOrder', JSON.stringify(req.data.orderObj))
-      orderText.innerText = generateString(req.data.translatedOrderObj)
+      // console.log('request data:', req.data)
+      // console.log('orderObj data saved to localStorage:', JSON.stringify(req.data.translatedOrderObj))
+      window.localStorage.setItem(
+        "receivedOrder",
+        JSON.stringify(req.data.translatedOrderObj)
+      );
+      orderText.innerText = generateString(req.data.translatedOrderObj);
       difficultyForm.style.visibility = "hidden";
-      gameDiv.style.visibility = "visible"
+      gameDiv.style.visibility = "visible";
     });
 });
 
-submitButton.addEventListener('click', () => {
-  const submittedOrder = getOrderObjectFromSelectionValues()
-  window.localStorage.setItem('submittedOrder', submittedOrder)
+submitButton.addEventListener("click", () => {
+  const submittedOrder = getOrderObjectFromSelectionValues();
+  window.localStorage.setItem("submittedOrder", submittedOrder);
   axios
-    .post('/submit-kopi', {
-      'recievedOrder': JSON.parse(window.localStorage.getItem('receivedOrder')), 
-      'submittedOrder': submittedOrder
+    .post("/submit-kopi", {
+      receivedOrder: JSON.parse(window.localStorage.getItem("receivedOrder")),
+      submittedOrder: submittedOrder,
     })
     .then((req, res) => {
-      window.localStorage.clear
-      console.log('request data:', req.data)
-      console.log('submitted request from index.js')
-    })
-})
+      window.localStorage.clear;
+      console.log('request data after server evaluation:')
+      console.log(req.data);
+      if (req.data['evaluation'] === true){
+        modalBodyText.innerText = `
+        Great job! You gave the customer exactly what they wanted.`
+      } else {
+        modalBodyText.innerText = `
+        Well, you have the user a ${generateString(req.data['submittedOrder'])} when they asked for a ${generateString(req.data['receivedOrder'])}.
+        Better luck next time!`
+      }
+      // console.log('request data:', req.data)
+      // console.log('submitted request from index.js')
+    });
+});
 // will need some sort of axios post after submission object is generated
